@@ -9,14 +9,18 @@ from scipy.linalg import cholesky, cho_solve
 import io
 import base64
 
+from typing import Tuple, List
+
 
 # Define kernel functions used in Gaussian Process Regression
-def linear_kernel(X1, X2, variance):
+def linear_kernel(X1: np.ndarray, X2: np.ndarray, variance: float) -> np.ndarray:
     """Linear kernel function that computes covariance based on linear relationship."""
     return variance * np.dot(X1, X2.T)
 
 
-def periodic_kernel(X1, X2, amplitude, length_scale, period):
+def periodic_kernel(
+    X1: np.ndarray, X2: np.ndarray, amplitude: float, length_scale: float, period: float
+) -> np.ndarray:
     """Periodic kernel function to capture seasonal patterns in the data."""
     dist_matrix = (
         np.sum(X1**2, 1).reshape(-1, 1) + np.sum(X2**2, 1) - 2 * np.dot(X1, X2.T)
@@ -25,7 +29,7 @@ def periodic_kernel(X1, X2, amplitude, length_scale, period):
     return amplitude * np.exp(-2 * (sin_component / length_scale) ** 2)
 
 
-def combined_kernel(X1, X2, params):
+def combined_kernel(X1: np.ndarray, X2: np.ndarray, params: List[float]) -> np.ndarray:
     """Combines linear and periodic kernels to model both trends and seasonality."""
     return linear_kernel(X1, X2, params[0]) + periodic_kernel(
         X1, X2, params[1], params[2], params[3]
@@ -33,7 +37,7 @@ def combined_kernel(X1, X2, params):
 
 
 # Define negative log likelihood function for optimization
-def negative_log_likelihood(params, X, y):
+def negative_log_likelihood(params: List[float], X: np.ndarray, y: np.ndarray) -> float:
     """Calculates the negative log likelihood for Gaussian Process model fitting."""
     K = combined_kernel(X, X, params) + params[4] * np.eye(
         len(X)
@@ -57,7 +61,7 @@ class GaussianProcessRegression:
         self.X_train = None
         self.y_train = None
 
-    def fit(self, X, y):
+    def fit(self, X: np.ndarray, y: np.ndarray) -> None:
         """Fits the Gaussian Process model to training data by optimizing hyperparameters."""
         self.X_train = X
         self.y_train = y
@@ -77,7 +81,7 @@ class GaussianProcessRegression:
         )
         self.params = result.x
 
-    def predict(self, X_test):
+    def predict(self, X_test: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
         """Predicts mean and variance for test data using the trained model."""
         K = combined_kernel(self.X_train, self.X_train, self.params) + self.params[
             4
@@ -97,7 +101,7 @@ class GaussianProcessRegression:
         return f_mean.flatten(), np.diag(f_var)
 
 
-def prepare_data():
+def prepare_data() -> Tuple[np.ndarray, ...]:
     """Loads and preprocesses data for training and testing."""
     # Load daily data from CSV file and aggregate to monthly data
     df = pd.read_csv("data/data_daily.csv", parse_dates=["Date"], index_col="Date")
@@ -124,7 +128,7 @@ def prepare_data():
     )
 
 
-def generate_forecast():
+def generate_forecast() -> Tuple[str, List[dict]]:
     """Generates forecast for future time periods using the trained Gaussian Process model."""
 
     # Prepare normalized training data
