@@ -18,7 +18,7 @@ Hyperparameters are optimized using the negative log-likelihood function, which 
 
 ## Project Structure
 
-- `GaussianProcessRegression.py`: Contains the implementation of the GPR model, data preparation, and forecasting functions.
+- `gpr_forecast.py`: Contains the implementation of the GPR model, data preparation, and forecasting functions.
 - `app.py`: Flask application to serve the frontend interface.
 - `templates/index.html`: HTML template for the web interface.
 - `static/styles.css`: Stylesheet for the web interface.
