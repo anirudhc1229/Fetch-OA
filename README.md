@@ -35,10 +35,12 @@ Ensure you have Python 3.12 and Docker installed on your system. Also, install n
 1. **Install Dependencies**:
    ```bash
    pip install -r requirements.txt
+   ```
    
 2. **Run Flask Application**:
   ```bash
   python3 app.py
+  ```
 
 3. **Access the Application**:
 Open your browser and navigate to `http://localhost:5000` to view the interface and generate forecasts.
@@ -48,11 +50,11 @@ Open your browser and navigate to `http://localhost:5000` to view the interface 
 1. **Build Docker Image**:
    ```bash
    docker build -t my-flask-app .
-   
+   ```
 2. **Run Docker Container**:
   ```bash
   docker run -p 5000:5000 my-flask-app
-
+  ```
 3. **Access the Application**:
 Open your browser and navigate to `http://localhost:5000` to view the interface and generate forecasts.
 
