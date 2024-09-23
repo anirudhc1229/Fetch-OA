@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Time Series Forecasting</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+<div class="container">
+<h1>Time Series Forecasting with Gaussian Process Regression</h1>
+<button id="generate-btn">Generate Forecast</button>
+<div id="results">
+<img id="forecast-plot" src="" alt="Forecast Plot" style="display:none;">
+<h2>Predicted Monthly Values for 2022</h2>
+<table id="prediction-table" style="display:none;">
+<thead>
+<tr>
+<th>Month</th>
+<th>Prediction</th>
+<th>Lower Bound</th>
+<th>Upper Bound</th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+</div>
+</div>
+
+<script>
+$(document).ready(function(){
+$('#generate-btn').click(function(){
+$.ajax({
+url: '/forecast',
+type: 'POST',
+success: function(data){
+// Display plot
+
+$('#forecast-plot').attr('src','data:image/png;base64,'+data.plot_url).show();
+
+
+// Populate table
+
+var tbody=$('#prediction-table tbody');
+tbody.empty();
+data.predictions.forEach(function(item){
+tbody.append('<tr><td>'+item.month+'</td><td>'+item.prediction+'</td><td>'+item.lower_bound+'</td><td>'+item.upper_bound+'</td></tr>');
+});
+$('#prediction-table').show();
+},
+error: function(){
+alert('Error generating forecast.');
+}
+});
+});
+});
+</script>
+
+</body>
+
+</html>
