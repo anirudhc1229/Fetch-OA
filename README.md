@@ -28,7 +28,7 @@ Hyperparameters are optimized using the negative log-likelihood function, which 
 
 ### Prerequisites
 
-Ensure you have Python 3.12 and Docker installed on your system. Also, install necessary Python packages if running manually.
+Ensure you have Python 3.12 and Docker installed on your system.
 
 ### Running Manually
 
